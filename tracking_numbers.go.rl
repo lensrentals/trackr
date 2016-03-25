@@ -1,7 +1,5 @@
 package trackr
 
-import "log"
-
 type TrackingNumber struct {
 	Carrier string
 	Number  string
@@ -215,8 +213,6 @@ func findTrackingNumbers(data string) []TrackingNumber {
 		write init;
 		write exec;
 	}%%
-
-	log.Printf("%q => %v", data, found)
 
 	return found
 }
