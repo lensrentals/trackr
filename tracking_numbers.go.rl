@@ -43,7 +43,7 @@ func findTrackingNumbers(data string) []TrackingNumber {
 	// USPS uses several schemes, which we check simultaneously
 	// First is USS128:
 	var uss128 struct {
-		sum int
+		sumA, sumB int
 		end int
 	}
 
@@ -93,7 +93,7 @@ func findTrackingNumbers(data string) []TrackingNumber {
 		action ups2a { ups.sum += 2*((int(fc) - '?') % 10) }
 		action upsstart { ups.sum = 0 }
 		action upsend {
-			if 10-(ups.sum % 10) == (int(fc) - '0') {
+			if (10-(ups.sum % 10)) % 10 == (int(fc) - '0') {
 				ups.end = p+1
 			}
 		}
@@ -107,16 +107,29 @@ func findTrackingNumbers(data string) []TrackingNumber {
 		# USPS uses a couple different checksum schemes
 		# We can match them simultaneously
 		# USS128 matches on either 20 or 22-digit strings:
-		action uss128start { uss128.sum = 0 }
-		action uss128a { uss128.sum += 3*(int(fc) - '0') }
-		action uss128b { uss128.sum += 1*(int(fc) - '0') }
-		action uss128end {
-			if 10-(uss128.sum % 10) == (int(fc) - '0') {
-				uss128.end = p+1
+		action uss128start { uss128.sumA = 0; uss128.sumB = 0 }
+		action uss128A { uss128.sumA += (int(fc) - '0') }
+		action uss128B { uss128.sumB += (int(fc) - '0') }
+		action uss128checkA {
+			{
+				lastDigit := (int(fc) - '0')
+				sum := 1*uss128.sumA + 3*(uss128.sumB-lastDigit)
+				if (10 - (sum % 10)) % 10 == lastDigit {
+					uss128.end = p+1
+				}
+			}
+		}
+		action uss128checkB {
+			{
+				lastDigit := (int(fc) - '0')
+				sum := 3*uss128.sumA + 1*(uss128.sumB-lastDigit)
+				if (10 - (sum % 10)) % 10 == lastDigit {
+					uss128.end = p+1
+				}
 			}
 		}
 
-		uss128 = ((digit@uss128a digit@uss128b){9,10} digit@uss128a digit@uss128end) >uss128start;
+		uss128 = ((digit@uss128A digit@uss128B){10,11}) >uss128start @uss128checkB;
 
 		# USS39 matches sets of 8 digits, with a 2-alpha prefix and a mandatory "US" suffix,
 		# and can use either of two checksums
@@ -133,8 +146,9 @@ func findTrackingNumbers(data string) []TrackingNumber {
 			{
 				var checkDigit10, checkDigit11 int
 
-				checkDigit10 = 10-(uss39.sum10 % 10)
+				checkDigit10 = (10-(uss39.sum10 % 10)) % 10
 
+				// because of course it needs to be complicated
 				remainder := uss39.sum11 % 11
 				if remainder == 0 {
 					checkDigit11 = 5

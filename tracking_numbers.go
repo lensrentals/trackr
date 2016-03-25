@@ -52,7 +52,7 @@ func findTrackingNumbers(data string) []TrackingNumber {
 	// USPS uses several schemes, which we check simultaneously
 	// First is USS128:
 	var uss128 struct {
-		sum int
+		sumA, sumB int
 		end int
 	}
 
@@ -184,7 +184,7 @@ func findTrackingNumbers(data string) []TrackingNumber {
 	}
 	goto st_out
 tr16:
-//line tracking_numbers.go.rl:175
+//line tracking_numbers.go.rl:189
 
 			if fe.end == p {
 				found = append(found, TrackingNumber{"FedEx", data[wordStart:p]})
@@ -226,7 +226,7 @@ tr16:
 		}
 		goto st0
 tr1:
-//line tracking_numbers.go.rl:174
+//line tracking_numbers.go.rl:188
  wordStart = p 
 //line tracking_numbers.go.rl:63
  fe.sum = 0 
@@ -237,9 +237,9 @@ tr1:
 //line tracking_numbers.go.rl:75
  fg.sum += 1*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:110
- uss128.sum = 0 
+ uss128.sumA = 0; uss128.sumB = 0 
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st1
 	st1:
 		if p++; p == pe {
@@ -266,7 +266,7 @@ tr5:
 //line tracking_numbers.go.rl:76
  fg.sum += 3*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:112
- uss128.sum += 1*(int(data[p]) - '0') 
+ uss128.sumB += (int(data[p]) - '0') 
 	goto st2
 	st2:
 		if p++; p == pe {
@@ -293,7 +293,7 @@ tr6:
 //line tracking_numbers.go.rl:75
  fg.sum += 1*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st3
 	st3:
 		if p++; p == pe {
@@ -320,7 +320,7 @@ tr7:
 //line tracking_numbers.go.rl:76
  fg.sum += 3*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:112
- uss128.sum += 1*(int(data[p]) - '0') 
+ uss128.sumB += (int(data[p]) - '0') 
 	goto st4
 	st4:
 		if p++; p == pe {
@@ -347,7 +347,7 @@ tr8:
 //line tracking_numbers.go.rl:75
  fg.sum += 1*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st5
 	st5:
 		if p++; p == pe {
@@ -374,7 +374,7 @@ tr9:
 //line tracking_numbers.go.rl:76
  fg.sum += 3*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:112
- uss128.sum += 1*(int(data[p]) - '0') 
+ uss128.sumB += (int(data[p]) - '0') 
 	goto st6
 	st6:
 		if p++; p == pe {
@@ -401,7 +401,7 @@ tr10:
 //line tracking_numbers.go.rl:75
  fg.sum += 1*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st7
 	st7:
 		if p++; p == pe {
@@ -428,7 +428,7 @@ tr11:
 //line tracking_numbers.go.rl:76
  fg.sum += 3*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:112
- uss128.sum += 1*(int(data[p]) - '0') 
+ uss128.sumB += (int(data[p]) - '0') 
 	goto st8
 	st8:
 		if p++; p == pe {
@@ -455,7 +455,7 @@ tr12:
 //line tracking_numbers.go.rl:75
  fg.sum += 1*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st9
 	st9:
 		if p++; p == pe {
@@ -482,7 +482,7 @@ tr13:
 //line tracking_numbers.go.rl:76
  fg.sum += 3*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:112
- uss128.sum += 1*(int(data[p]) - '0') 
+ uss128.sumB += (int(data[p]) - '0') 
 	goto st10
 	st10:
 		if p++; p == pe {
@@ -509,7 +509,7 @@ tr14:
 //line tracking_numbers.go.rl:75
  fg.sum += 1*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st11
 	st11:
 		if p++; p == pe {
@@ -542,7 +542,7 @@ tr15:
 //line tracking_numbers.go.rl:76
  fg.sum += 3*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:112
- uss128.sum += 1*(int(data[p]) - '0') 
+ uss128.sumB += (int(data[p]) - '0') 
 	goto st12
 	st12:
 		if p++; p == pe {
@@ -569,7 +569,7 @@ tr17:
 //line tracking_numbers.go.rl:75
  fg.sum += 1*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st13
 	st13:
 		if p++; p == pe {
@@ -596,7 +596,7 @@ tr18:
 //line tracking_numbers.go.rl:76
  fg.sum += 3*(int(data[p]) - '0') 
 //line tracking_numbers.go.rl:112
- uss128.sum += 1*(int(data[p]) - '0') 
+ uss128.sumB += (int(data[p]) - '0') 
 	goto st14
 	st14:
 		if p++; p == pe {
@@ -633,7 +633,7 @@ tr19:
 			}
 		
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st15
 	st15:
 		if p++; p == pe {
@@ -656,7 +656,7 @@ tr19:
 		goto tr16
 tr20:
 //line tracking_numbers.go.rl:112
- uss128.sum += 1*(int(data[p]) - '0') 
+ uss128.sumB += (int(data[p]) - '0') 
 	goto st16
 	st16:
 		if p++; p == pe {
@@ -679,7 +679,7 @@ tr20:
 		goto st0
 tr21:
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st17
 	st17:
 		if p++; p == pe {
@@ -702,7 +702,7 @@ tr21:
 		goto st0
 tr22:
 //line tracking_numbers.go.rl:112
- uss128.sum += 1*(int(data[p]) - '0') 
+ uss128.sumB += (int(data[p]) - '0') 
 	goto st18
 	st18:
 		if p++; p == pe {
@@ -725,7 +725,7 @@ tr22:
 		goto st0
 tr23:
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st19
 	st19:
 		if p++; p == pe {
@@ -748,11 +748,15 @@ tr23:
 		goto st0
 tr24:
 //line tracking_numbers.go.rl:112
- uss128.sum += 1*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:113
+ uss128.sumB += (int(data[p]) - '0') 
+//line tracking_numbers.go.rl:122
 
-			if 10-(uss128.sum % 10) == (int(data[p]) - '0') {
-				uss128.end = p+1
+			{
+				lastDigit := (int(data[p]) - '0')
+				sum := 3*uss128.sumA + 1*(uss128.sumB-lastDigit)
+				if (10 - (sum % 10)) % 10 == lastDigit {
+					uss128.end = p+1
+				}
 			}
 		
 	goto st20
@@ -761,7 +765,7 @@ tr24:
 			goto _test_eof20
 		}
 	st_case_20:
-//line tracking_numbers.go:765
+//line tracking_numbers.go:769
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -777,14 +781,14 @@ tr24:
 		goto tr16
 tr25:
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st21
 	st21:
 		if p++; p == pe {
 			goto _test_eof21
 		}
 	st_case_21:
-//line tracking_numbers.go:788
+//line tracking_numbers.go:792
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -799,23 +803,29 @@ tr25:
 		}
 		goto st0
 tr26:
-//line tracking_numbers.go.rl:113
+//line tracking_numbers.go.rl:112
+ uss128.sumB += (int(data[p]) - '0') 
+//line tracking_numbers.go.rl:122
 
-			if 10-(uss128.sum % 10) == (int(data[p]) - '0') {
-				uss128.end = p+1
+			{
+				lastDigit := (int(data[p]) - '0')
+				sum := 3*uss128.sumA + 1*(uss128.sumB-lastDigit)
+				if (10 - (sum % 10)) % 10 == lastDigit {
+					uss128.end = p+1
+				}
 			}
 		
 	goto st22
 tr58:
 //line tracking_numbers.go.rl:95
 
-			if 10-(ups.sum % 10) == (int(data[p]) - '0') {
+			if (10-(ups.sum % 10)) % 10 == (int(data[p]) - '0') {
 				ups.end = p+1
 			}
 		
 	goto st22
 tr70:
-//line tracking_numbers.go.rl:150
+//line tracking_numbers.go.rl:164
 
 			if uss39.sumOK {
 				uss39.end = p+1
@@ -827,7 +837,7 @@ tr70:
 			goto _test_eof22
 		}
 	st_case_22:
-//line tracking_numbers.go:831
+//line tracking_numbers.go:841
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -860,7 +870,7 @@ tr70:
 		}
 		goto st0
 tr2:
-//line tracking_numbers.go.rl:174
+//line tracking_numbers.go.rl:188
  wordStart = p 
 //line tracking_numbers.go.rl:63
  fe.sum = 0 
@@ -873,16 +883,16 @@ tr2:
 //line tracking_numbers.go.rl:94
  ups.sum = 0 
 //line tracking_numbers.go.rl:110
- uss128.sum = 0 
+ uss128.sumA = 0; uss128.sumB = 0 
 //line tracking_numbers.go.rl:111
- uss128.sum += 3*(int(data[p]) - '0') 
+ uss128.sumA += (int(data[p]) - '0') 
 	goto st24
 	st24:
 		if p++; p == pe {
 			goto _test_eof24
 		}
 	st_case_24:
-//line tracking_numbers.go:886
+//line tracking_numbers.go:896
 		if data[p] == 90 {
 			goto st25
 		}
@@ -930,7 +940,7 @@ tr29:
 			goto _test_eof26
 		}
 	st_case_26:
-//line tracking_numbers.go:934
+//line tracking_numbers.go:944
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -957,7 +967,7 @@ tr31:
 			goto _test_eof27
 		}
 	st_case_27:
-//line tracking_numbers.go:961
+//line tracking_numbers.go:971
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -984,7 +994,7 @@ tr33:
 			goto _test_eof28
 		}
 	st_case_28:
-//line tracking_numbers.go:988
+//line tracking_numbers.go:998
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1011,7 +1021,7 @@ tr35:
 			goto _test_eof29
 		}
 	st_case_29:
-//line tracking_numbers.go:1015
+//line tracking_numbers.go:1025
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1038,7 +1048,7 @@ tr37:
 			goto _test_eof30
 		}
 	st_case_30:
-//line tracking_numbers.go:1042
+//line tracking_numbers.go:1052
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1065,7 +1075,7 @@ tr39:
 			goto _test_eof31
 		}
 	st_case_31:
-//line tracking_numbers.go:1069
+//line tracking_numbers.go:1079
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1092,7 +1102,7 @@ tr41:
 			goto _test_eof32
 		}
 	st_case_32:
-//line tracking_numbers.go:1096
+//line tracking_numbers.go:1106
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1119,7 +1129,7 @@ tr43:
 			goto _test_eof33
 		}
 	st_case_33:
-//line tracking_numbers.go:1123
+//line tracking_numbers.go:1133
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1146,7 +1156,7 @@ tr45:
 			goto _test_eof34
 		}
 	st_case_34:
-//line tracking_numbers.go:1150
+//line tracking_numbers.go:1160
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1173,7 +1183,7 @@ tr47:
 			goto _test_eof35
 		}
 	st_case_35:
-//line tracking_numbers.go:1177
+//line tracking_numbers.go:1187
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1200,7 +1210,7 @@ tr49:
 			goto _test_eof36
 		}
 	st_case_36:
-//line tracking_numbers.go:1204
+//line tracking_numbers.go:1214
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1227,7 +1237,7 @@ tr51:
 			goto _test_eof37
 		}
 	st_case_37:
-//line tracking_numbers.go:1231
+//line tracking_numbers.go:1241
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1254,7 +1264,7 @@ tr53:
 			goto _test_eof38
 		}
 	st_case_38:
-//line tracking_numbers.go:1258
+//line tracking_numbers.go:1268
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1281,7 +1291,7 @@ tr55:
 			goto _test_eof39
 		}
 	st_case_39:
-//line tracking_numbers.go:1285
+//line tracking_numbers.go:1295
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1308,7 +1318,7 @@ tr57:
 			goto _test_eof40
 		}
 	st_case_40:
-//line tracking_numbers.go:1312
+//line tracking_numbers.go:1322
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1323,9 +1333,9 @@ tr57:
 		}
 		goto st0
 tr3:
-//line tracking_numbers.go.rl:174
+//line tracking_numbers.go.rl:188
  wordStart = p 
-//line tracking_numbers.go.rl:123
+//line tracking_numbers.go.rl:136
  uss39.sum10 = 0; uss39.sum11 = 0; uss39.sumOK = false 
 	goto st41
 	st41:
@@ -1333,7 +1343,7 @@ tr3:
 			goto _test_eof41
 		}
 	st_case_41:
-//line tracking_numbers.go:1337
+//line tracking_numbers.go:1347
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1366,7 +1376,7 @@ tr3:
 		}
 		goto st0
 tr60:
-//line tracking_numbers.go.rl:124
+//line tracking_numbers.go.rl:137
  uss39.sum11 += 8*(int(data[p]) - '0'); uss39.sum10 += 1*(int(data[p]) - '0') 
 	goto st43
 	st43:
@@ -1374,7 +1384,7 @@ tr60:
 			goto _test_eof43
 		}
 	st_case_43:
-//line tracking_numbers.go:1378
+//line tracking_numbers.go:1388
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1389,7 +1399,7 @@ tr60:
 		}
 		goto st0
 tr61:
-//line tracking_numbers.go.rl:125
+//line tracking_numbers.go.rl:138
  uss39.sum11 += 6*(int(data[p]) - '0'); uss39.sum10 += 3*(int(data[p]) - '0') 
 	goto st44
 	st44:
@@ -1397,7 +1407,7 @@ tr61:
 			goto _test_eof44
 		}
 	st_case_44:
-//line tracking_numbers.go:1401
+//line tracking_numbers.go:1411
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1412,7 +1422,7 @@ tr61:
 		}
 		goto st0
 tr62:
-//line tracking_numbers.go.rl:126
+//line tracking_numbers.go.rl:139
  uss39.sum11 += 4*(int(data[p]) - '0'); uss39.sum10 += 1*(int(data[p]) - '0') 
 	goto st45
 	st45:
@@ -1420,7 +1430,7 @@ tr62:
 			goto _test_eof45
 		}
 	st_case_45:
-//line tracking_numbers.go:1424
+//line tracking_numbers.go:1434
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1435,7 +1445,7 @@ tr62:
 		}
 		goto st0
 tr63:
-//line tracking_numbers.go.rl:127
+//line tracking_numbers.go.rl:140
  uss39.sum11 += 2*(int(data[p]) - '0'); uss39.sum10 += 3*(int(data[p]) - '0') 
 	goto st46
 	st46:
@@ -1443,7 +1453,7 @@ tr63:
 			goto _test_eof46
 		}
 	st_case_46:
-//line tracking_numbers.go:1447
+//line tracking_numbers.go:1457
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1458,7 +1468,7 @@ tr63:
 		}
 		goto st0
 tr64:
-//line tracking_numbers.go.rl:128
+//line tracking_numbers.go.rl:141
  uss39.sum11 += 3*(int(data[p]) - '0'); uss39.sum10 += 1*(int(data[p]) - '0') 
 	goto st47
 	st47:
@@ -1466,7 +1476,7 @@ tr64:
 			goto _test_eof47
 		}
 	st_case_47:
-//line tracking_numbers.go:1470
+//line tracking_numbers.go:1480
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1481,7 +1491,7 @@ tr64:
 		}
 		goto st0
 tr65:
-//line tracking_numbers.go.rl:129
+//line tracking_numbers.go.rl:142
  uss39.sum11 += 5*(int(data[p]) - '0'); uss39.sum10 += 3*(int(data[p]) - '0') 
 	goto st48
 	st48:
@@ -1489,7 +1499,7 @@ tr65:
 			goto _test_eof48
 		}
 	st_case_48:
-//line tracking_numbers.go:1493
+//line tracking_numbers.go:1503
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1504,7 +1514,7 @@ tr65:
 		}
 		goto st0
 tr66:
-//line tracking_numbers.go.rl:130
+//line tracking_numbers.go.rl:143
  uss39.sum11 += 9*(int(data[p]) - '0'); uss39.sum10 += 1*(int(data[p]) - '0') 
 	goto st49
 	st49:
@@ -1512,7 +1522,7 @@ tr66:
 			goto _test_eof49
 		}
 	st_case_49:
-//line tracking_numbers.go:1516
+//line tracking_numbers.go:1526
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1527,7 +1537,7 @@ tr66:
 		}
 		goto st0
 tr67:
-//line tracking_numbers.go.rl:131
+//line tracking_numbers.go.rl:144
  uss39.sum11 += 7*(int(data[p]) - '0'); uss39.sum10 += 3*(int(data[p]) - '0') 
 	goto st50
 	st50:
@@ -1535,7 +1545,7 @@ tr67:
 			goto _test_eof50
 		}
 	st_case_50:
-//line tracking_numbers.go:1539
+//line tracking_numbers.go:1549
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -1550,13 +1560,14 @@ tr67:
 		}
 		goto st0
 tr68:
-//line tracking_numbers.go.rl:132
+//line tracking_numbers.go.rl:145
 
 			{
 				var checkDigit10, checkDigit11 int
 
-				checkDigit10 = 10-(uss39.sum10 % 10)
+				checkDigit10 = (10-(uss39.sum10 % 10)) % 10
 
+				// because of course it needs to be complicated
 				remainder := uss39.sum11 % 11
 				if remainder == 0 {
 					checkDigit11 = 5
@@ -1575,7 +1586,7 @@ tr68:
 			goto _test_eof51
 		}
 	st_case_51:
-//line tracking_numbers.go:1579
+//line tracking_numbers.go:1590
 		if data[p] == 85 {
 			goto st52
 		}
@@ -1672,7 +1683,7 @@ tr68:
 	if p == eof {
 		switch cs {
 		case 12, 15, 20, 22:
-//line tracking_numbers.go.rl:175
+//line tracking_numbers.go.rl:189
 
 			if fe.end == p {
 				found = append(found, TrackingNumber{"FedEx", data[wordStart:p]})
@@ -1690,13 +1701,13 @@ tr68:
 				found = append(found, TrackingNumber{"USPS", data[wordStart:p]})
 			}
 		
-//line tracking_numbers.go:1694
+//line tracking_numbers.go:1705
 		}
 	}
 
 	}
 
-//line tracking_numbers.go.rl:203
+//line tracking_numbers.go.rl:217
 
 
 	log.Printf("%q => %v", data, found)
