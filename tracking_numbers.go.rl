@@ -41,10 +41,16 @@ func findTrackingNumbers(data string) []TrackingNumber {
 	}
 
 	// USPS uses several schemes, which we check simultaneously
-	var usps struct {
-		mod10a int
-		mod10b int
-		mod11 int
+	// First is USS128:
+	var uss128 struct {
+		sum int
+		end int
+	}
+
+	// Second is USS39:
+	var uss39 struct {
+		sum10, sum11 int
+		sumOK bool
 		end int
 	}
 
@@ -100,35 +106,69 @@ func findTrackingNumbers(data string) []TrackingNumber {
 
 		# USPS uses a couple different checksum schemes
 		# We can match them simultaneously
-		action uspsstart { usps.mod10a = 0; usps.mod10b = 0; usps.mod11 = 0 }
-		action uspsMod10a { usps.mod10a += 3*(int(fc) - '0'); usps.mod10b += 1*(int(fc) - '0') }
-		action uspsMod10b { usps.mod10a += 1*(int(fc) - '0'); usps.mod10b += 3*(int(fc) - '0') }
-		action uspsMod10a_end {
-			//log.Printf("A: mod10a: %d, mod10b: %d, fc: %d", usps.mod10a, usps.mod10b, (int(fc) - '0'))
-			if 10-(usps.mod10a % 10) == (int(fc) - '0') {
-				usps.end = p+1
-			}
-		}
-		action uspsMod10b_end {
-			//log.Printf("B: mod10a: %d, mod10b: %d, fc: %d", usps.mod10a, usps.mod10b, (int(fc) - '0'))
-			if 10-(usps.mod10b % 10) == (int(fc) - '0') {
-				usps.end = p+1
+		# USS128 matches on either 20 or 22-digit strings:
+		action uss128start { uss128.sum = 0 }
+		action uss128a { uss128.sum += 3*(int(fc) - '0') }
+		action uss128b { uss128.sum += 1*(int(fc) - '0') }
+		action uss128end {
+			if 10-(uss128.sum % 10) == (int(fc) - '0') {
+				uss128.end = p+1
 			}
 		}
 
-		# USPS mod10 counts from the right, but we don't have a length yet
-		# Tally even-length and odd-length strings simultaneously using separate counters, and
-		# figure it out which to compare against in the final digit action
-		# Match any strings 17-24 characters with the right numeric properties
-		uspsMod10 =
-			(digit@uspsMod10a digit@uspsMod10b){8,11}
-			((digit@uspsMod10a digit@uspsMod10b_end) | digit@uspsMod10a_end);
+		uss128 = ((digit@uss128a digit@uss128b){9,10} digit@uss128a digit@uss128end) >uss128start;
 
-		# USPS is collectively any of the schemes, with the common entry
-		usps = (uspsMod10) >uspsstart;
+		# USS39 matches sets of 8 digits, with a 2-alpha prefix and a mandatory "US" suffix,
+		# and can use either of two checksums
+		action uss39start { uss39.sum10 = 0; uss39.sum11 = 0; uss39.sumOK = false }
+		action uss39d1 { uss39.sum11 += 8*(int(fc) - '0'); uss39.sum10 += 1*(int(fc) - '0') }
+		action uss39d2 { uss39.sum11 += 6*(int(fc) - '0'); uss39.sum10 += 3*(int(fc) - '0') }
+		action uss39d3 { uss39.sum11 += 4*(int(fc) - '0'); uss39.sum10 += 1*(int(fc) - '0') }
+		action uss39d4 { uss39.sum11 += 2*(int(fc) - '0'); uss39.sum10 += 3*(int(fc) - '0') }
+		action uss39d5 { uss39.sum11 += 3*(int(fc) - '0'); uss39.sum10 += 1*(int(fc) - '0') }
+		action uss39d6 { uss39.sum11 += 5*(int(fc) - '0'); uss39.sum10 += 3*(int(fc) - '0') }
+		action uss39d7 { uss39.sum11 += 9*(int(fc) - '0'); uss39.sum10 += 1*(int(fc) - '0') }
+		action uss39d8 { uss39.sum11 += 7*(int(fc) - '0'); uss39.sum10 += 3*(int(fc) - '0') }
+		action uss39check {
+			{
+				var checkDigit10, checkDigit11 int
+
+				checkDigit10 = 10-(uss39.sum10 % 10)
+
+				remainder := uss39.sum11 % 11
+				if remainder == 0 {
+					checkDigit11 = 5
+				} else if remainder == 1 {
+					checkDigit11 = 0
+				} else {
+					checkDigit11 = 11 - remainder
+				}
+
+				uss39.sumOK = (checkDigit10 == (int(fc) - '0')) || (checkDigit11 == (int(fc) - '0'))
+			}
+		}
+		action uss39complete {
+			if uss39.sumOK {
+				uss39.end = p+1
+			}
+		}
+
+		uss39 = (
+			('A'..'Z'{2})
+			digit@uss39d1
+			digit@uss39d2
+			digit@uss39d3
+			digit@uss39d4
+			digit@uss39d5
+			digit@uss39d6
+			digit@uss39d7
+			digit@uss39d8
+			digit@uss39check
+			'US'@uss39complete
+			) >uss39start;
 
 		# Tracking numbers are any of our matchers
-		tracking = fe | fg | ups | usps;
+		tracking = fe | fg | ups | uss128 | uss39;
 
 		# Match and emit on whole words only
 		action start { wordStart = p }
@@ -143,7 +183,9 @@ func findTrackingNumbers(data string) []TrackingNumber {
 				found = append(found, TrackingNumber{"UPS", data[wordStart:p]})
 			}
 
-			if usps.end == p {
+			if uss128.end == p {
+				found = append(found, TrackingNumber{"USPS", data[wordStart:p]})
+			} else if uss39.end == p {
 				found = append(found, TrackingNumber{"USPS", data[wordStart:p]})
 			}
 		}

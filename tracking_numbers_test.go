@@ -84,6 +84,7 @@ func TestFindTrackingNumbers(t *testing.T) {
 		{"UPS with punctuation", "here:1Z0A19T50395201562!!!", []TrackingNumber{{"UPS", "1Z0A19T50395201562"}}},
 		{"multiple UPS", "1Z17RV550319270595 and 1ZW0W2150362177018?", []TrackingNumber{{"UPS", "1Z17RV550319270595"}, {"UPS", "1ZW0W2150362177018"}}},
 
+		// from LR database
 		{"USPS mod 10", "9505514863416085007661", []TrackingNumber{{"USPS", "9505514863416085007661"}}},
 		{"USPS mod 10", "9500114129076084016042", []TrackingNumber{{"USPS", "9500114129076084016042"}}},
 		{"USPS mod 10", "9114999944314135394161", []TrackingNumber{{"USPS", "9114999944314135394161"}}},
@@ -92,6 +93,22 @@ func TestFindTrackingNumbers(t *testing.T) {
 		{"USPS mod 10", "9405510200830034303190", []TrackingNumber{{"USPS", "9405510200830034303190"}}},
 		{"USPS mod 10", "70150640000609285719", []TrackingNumber{{"USPS", "70150640000609285719"}}},
 		{"USPS mod 10", "13152810000050524531", []TrackingNumber{{"USPS", "13152810000050524531"}}},
+
+		// from https://github.com/franckverrot/activevalidators/blob/master/test/validations/tracking_number_test.rb
+		{"USS39 mod 10", "EA123456784US", []TrackingNumber{{"USPS", "EA123456784US"}}},
+		{"USS39 mod 11", "RB123456785US", []TrackingNumber{{"USPS", "RB123456785US"}}},
+		{"20 character USS128 mod 10", "71123456789123456787", []TrackingNumber{{"USPS", "71123456789123456787"}}},
+		{"20 character USS128 mod 10 ending in 0", "03110240000115809160", []TrackingNumber{{"USPS", "03110240000115809160"}}},
+		{"22 character USS128 mod 10 ending in 0", "9171969010756003077385", []TrackingNumber{{"USPS", "9171969010756003077385"}}},
+
+		{"USS39 tracking number with invalid check digit", "EA123456782US", []TrackingNumber{}},
+		{"USS39 tracking number that is too short", "123456784US", []TrackingNumber{}},
+		{"USS39 tracking number that is too long", "EAB123456784US", []TrackingNumber{}},
+		{"USS39 tracking number with non-US product id", "EA123456784UT", []TrackingNumber{}},
+		{"USS128 tracking number with invalid check-digit", "71123456789123456788", []TrackingNumber{}},
+		{"USS128 tracking number that is too short", "7112345678912345678", []TrackingNumber{}},
+		{"USS128 tracking number that is too long", "711234567891234567879287", []TrackingNumber{}},
+		{"USS128 tracking number with invalid chars", "U11234567891234567879", []TrackingNumber{}},
 
 		{"mangled USPS", "9114901496450568878985", []TrackingNumber{}},
 	}
