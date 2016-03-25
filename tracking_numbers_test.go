@@ -67,6 +67,11 @@ func TestFindTrackingNumbers(t *testing.T) {
 		{"FedEx Ground 15-digit with punctuation", "here:366226074417244!!!", []TrackingNumber{{"FedEx", "366226074417244"}}},
 		{"multiple FedEx Ground 15-digits", "366226074417244 and 987654312345672?", []TrackingNumber{{"FedEx", "366226074417244"}, {"FedEx", "987654312345672"}}},
 
+		{"fun FedEx Ground", "753840910327850", []TrackingNumber{{"FedEx", "753840910327850"}}},
+		{"fun FedEx Ground", "753840910269020", []TrackingNumber{{"FedEx", "753840910269020"}}},
+
+		//{"multiple FedEx", "FedEx\tGround\tReturn\t753840910327874\t2016.03.21\t\t\t\t\nGenerate PDF\nFedEx\tStandard Overnight\tOutbound\t782643691812\t2016.03.21\t2016.03.22\t\t\t\nFedEx\tStandard Overnight\tOutbound\t782643668950\t2016.03.21\t2016.03.22\t\t\t\nFedEx\tGround\tReturn\t753840910327850", []TrackingNumber{{"FedEx", "753840910327874"}, {"FedEx", "782643691812"}, {"FedEx", "782643668950"}, {"FedEx", "753840910327850"}}},
+
 		{"UPS", "1Z0A19T50395201562", []TrackingNumber{{"UPS", "1Z0A19T50395201562"}}},
 		{"mangled UPS", "1Z0A19T50395201560", []TrackingNumber{}},
 		{"mangled UPS", "1Z0A19T50395201561", []TrackingNumber{}},

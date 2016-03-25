@@ -626,7 +626,7 @@ tr19:
 		
 //line tracking_numbers.go.rl:76
 
-			if 10-(fg.sum % 10) == (int(data[p]) - '0') {
+			if (10-(fg.sum % 10)) % 10 == (int(data[p]) - '0') {
 				fg.end = p+1
 			}
 		

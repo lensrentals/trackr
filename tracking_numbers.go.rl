@@ -74,7 +74,7 @@ func findTrackingNumbers(data string) []TrackingNumber {
 		action fg3 { fg.sum += 3*(int(fc) - '0') }
 		action fgstart { fg.sum = 0 }
 		action fgend {
-			if 10-(fg.sum % 10) == (int(fc) - '0') {
+			if (10-(fg.sum % 10)) % 10 == (int(fc) - '0') {
 				fg.end = p+1
 			}
 		}
