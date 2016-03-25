@@ -35,6 +35,13 @@ func findTrackingNumbers(data string) []TrackingNumber {
 		end int
 	}
 
+	// UPS
+	var ups struct {
+		sum int
+		start int
+		end int
+	}
+
 	%%{
 		# FedEx Express uses a checksum that multiplies digits by 3 coefficients
 		# Use one action for each type of digit
@@ -76,8 +83,31 @@ func findTrackingNumbers(data string) []TrackingNumber {
 		fg = ( (digit@fg1 digit@fg3){7} digit@fgend) >fgstart %fgemit;
 
 
+		# UPS uses a checksum containing both alphabetic and numeric characters with two coefficients
+		# Use one action for each {coefficient, chartype}
+		action ups1n { ups.sum += 1*(int(fc) - '0') }
+		action ups1a { ups.sum += 1*((int(fc) - '?') % 10) }
+		action ups2n { ups.sum += 2*(int(fc) - '0') }
+		action ups2a { ups.sum += 2*((int(fc) - '?') % 10) }
+		action upsstart { ups.start = p; ups.sum = 0 }
+		action upsend {
+			if 10-(ups.sum % 10) == (int(fc) - '0') {
+				ups.end = p+1
+			}
+		}
+		action upsemit {
+			if ups.end > ups.start {
+				found = append(found, TrackingNumber{"UPS", data[ups.start:ups.end]})
+			}
+		}
+
+		ups1 = (digit@ups1n) | ('A'..'Z'@ups1a);
+		ups2 = (digit@ups2n) | ('A'..'Z'@ups2a);
+
+		ups = ('1Z' (ups1 ups2){7} ups1 digit@upsend) >upsstart %upsemit;
+
 		# Tracking numbers are any of our matchers
-		tracking = fe | fg;
+		tracking = fe | fg | ups;
 
 		# Words could be tracking numbers (ignoring errors) or just alphanumeric strings
 		word = (tracking $lerr{}) | (alnum+);
@@ -90,14 +120,6 @@ func findTrackingNumbers(data string) []TrackingNumber {
 		write init;
 		write exec;
 	}%%
-
-	if cs < tracking_number_first_final {
-		log.Printf("%q errored!", data)
-	}
-
-	if eof == pe {
-		// unused, sure
-	}
 
 	log.Printf("%q => %v", data, found)
 

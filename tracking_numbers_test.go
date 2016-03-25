@@ -66,6 +66,22 @@ func TestFindTrackingNumbers(t *testing.T) {
 		{"FedEx Ground 15-digit with words", "this 366226074417244 thing", []TrackingNumber{{"FedEx", "366226074417244"}}},
 		{"FedEx Ground 15-digit with punctuation", "here:366226074417244!!!", []TrackingNumber{{"FedEx", "366226074417244"}}},
 		{"multiple FedEx Ground 15-digits", "366226074417244 and 987654312345672?", []TrackingNumber{{"FedEx", "366226074417244"}, {"FedEx", "987654312345672"}}},
+
+		{"UPS", "1Z0A19T50395201562", []TrackingNumber{{"UPS", "1Z0A19T50395201562"}}},
+		{"mangled UPS", "1Z0A19T50395201560", []TrackingNumber{}},
+		{"mangled UPS", "1Z0A19T50395201561", []TrackingNumber{}},
+		{"mangled UPS", "1Z0A19T50395201563", []TrackingNumber{}},
+		{"mangled UPS", "1Z0A19T50395201564", []TrackingNumber{}},
+		{"mangled UPS", "1Z0A19T50395201565", []TrackingNumber{}},
+		{"mangled UPS", "1Z0A19T50395201566", []TrackingNumber{}},
+		{"mangled UPS", "1Z0A19T50395201567", []TrackingNumber{}},
+		{"mangled UPS", "1Z0A19T50395201568", []TrackingNumber{}},
+		{"mangled UPS", "1Z0A19T50395201569", []TrackingNumber{}},
+		{"UPS with extra number", "1Z0A19T503952015695", []TrackingNumber{}},
+		{"UPS with spaces", "  1Z0A19T50395201562  ", []TrackingNumber{{"UPS", "1Z0A19T50395201562"}}},
+		{"UPS with words", "this 1Z0A19T50395201562 thing", []TrackingNumber{{"UPS", "1Z0A19T50395201562"}}},
+		{"UPS with punctuation", "here:1Z0A19T50395201562!!!", []TrackingNumber{{"UPS", "1Z0A19T50395201562"}}},
+		{"multiple UPS", "1Z17RV550319270595 and 1ZW0W2150362177018?", []TrackingNumber{{"UPS", "1Z17RV550319270595"}, {"UPS", "1ZW0W2150362177018"}}},
 	}
 	for _, tt := range tests {
 		if got := findTrackingNumbers(tt.message); !reflect.DeepEqual(got, tt.want) {
