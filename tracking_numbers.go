@@ -93,7 +93,7 @@ func findTrackingNumbers(data string) []TrackingNumber {
 	}
 	goto st_out
 tr0:
-//line tracking_numbers.go.rl:81
+//line tracking_numbers.go.rl:83
 
 	goto st0
 tr14:
@@ -103,7 +103,7 @@ tr14:
 				found = append(found, TrackingNumber{"FedEx", data[fe.start:fe.end]})
 			}
 		
-//line tracking_numbers.go.rl:81
+//line tracking_numbers.go.rl:83
 
 	goto st0
 tr18:
@@ -113,13 +113,13 @@ tr18:
 				found = append(found, TrackingNumber{"FedEx", data[fe.start:fe.end]})
 			}
 		
-//line tracking_numbers.go.rl:68
+//line tracking_numbers.go.rl:69
 
 			if fg.end > fg.start && !(fe.end > fe.start) { // because we can overlap with FedEx Express
 				found = append(found, TrackingNumber{"FedEx", data[fg.start:fg.end]})
 			}
 		
-//line tracking_numbers.go.rl:81
+//line tracking_numbers.go.rl:83
 
 	goto st0
 	st0:
@@ -143,12 +143,12 @@ tr18:
 		goto tr0
 tr1:
 //line tracking_numbers.go.rl:44
- fe.start = p 
+ fe.start = p; fe.sum = 0 
 //line tracking_numbers.go.rl:42
  fe.sum += 3*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:62
- fg.start = p 
-//line tracking_numbers.go.rl:60
+//line tracking_numbers.go.rl:63
+ fg.start = p; fg.sum = 0 
+//line tracking_numbers.go.rl:61
  fg.sum += 1*(int(data[p]) - '0') 
 	goto st1
 	st1:
@@ -173,7 +173,7 @@ tr1:
 tr3:
 //line tracking_numbers.go.rl:41
  fe.sum += 1*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:61
+//line tracking_numbers.go.rl:62
  fg.sum += 3*(int(data[p]) - '0') 
 	goto st2
 	st2:
@@ -198,7 +198,7 @@ tr3:
 tr4:
 //line tracking_numbers.go.rl:43
  fe.sum += 7*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:60
+//line tracking_numbers.go.rl:61
  fg.sum += 1*(int(data[p]) - '0') 
 	goto st3
 	st3:
@@ -223,7 +223,7 @@ tr4:
 tr5:
 //line tracking_numbers.go.rl:42
  fe.sum += 3*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:61
+//line tracking_numbers.go.rl:62
  fg.sum += 3*(int(data[p]) - '0') 
 	goto st4
 	st4:
@@ -248,7 +248,7 @@ tr5:
 tr6:
 //line tracking_numbers.go.rl:41
  fe.sum += 1*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:60
+//line tracking_numbers.go.rl:61
  fg.sum += 1*(int(data[p]) - '0') 
 	goto st5
 	st5:
@@ -273,7 +273,7 @@ tr6:
 tr7:
 //line tracking_numbers.go.rl:43
  fe.sum += 7*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:61
+//line tracking_numbers.go.rl:62
  fg.sum += 3*(int(data[p]) - '0') 
 	goto st6
 	st6:
@@ -298,7 +298,7 @@ tr7:
 tr8:
 //line tracking_numbers.go.rl:42
  fe.sum += 3*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:60
+//line tracking_numbers.go.rl:61
  fg.sum += 1*(int(data[p]) - '0') 
 	goto st7
 	st7:
@@ -323,7 +323,7 @@ tr8:
 tr9:
 //line tracking_numbers.go.rl:41
  fe.sum += 1*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:61
+//line tracking_numbers.go.rl:62
  fg.sum += 3*(int(data[p]) - '0') 
 	goto st8
 	st8:
@@ -348,7 +348,7 @@ tr9:
 tr10:
 //line tracking_numbers.go.rl:43
  fe.sum += 7*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:60
+//line tracking_numbers.go.rl:61
  fg.sum += 1*(int(data[p]) - '0') 
 	goto st9
 	st9:
@@ -373,7 +373,7 @@ tr10:
 tr11:
 //line tracking_numbers.go.rl:42
  fe.sum += 3*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:61
+//line tracking_numbers.go.rl:62
  fg.sum += 3*(int(data[p]) - '0') 
 	goto st10
 	st10:
@@ -398,7 +398,7 @@ tr11:
 tr12:
 //line tracking_numbers.go.rl:41
  fe.sum += 1*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:60
+//line tracking_numbers.go.rl:61
  fg.sum += 1*(int(data[p]) - '0') 
 	goto st11
 	st11:
@@ -429,7 +429,7 @@ tr13:
 				fe.end = p+1
 			}
 		
-//line tracking_numbers.go.rl:61
+//line tracking_numbers.go.rl:62
  fg.sum += 3*(int(data[p]) - '0') 
 	goto st12
 	st12:
@@ -454,7 +454,7 @@ tr13:
 tr15:
 //line tracking_numbers.go.rl:42
  fe.sum += 3*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:60
+//line tracking_numbers.go.rl:61
  fg.sum += 1*(int(data[p]) - '0') 
 	goto st13
 	st13:
@@ -479,7 +479,7 @@ tr15:
 tr16:
 //line tracking_numbers.go.rl:41
  fe.sum += 1*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:61
+//line tracking_numbers.go.rl:62
  fg.sum += 3*(int(data[p]) - '0') 
 	goto st14
 	st14:
@@ -510,7 +510,7 @@ tr17:
 				fe.end = p+1
 			}
 		
-//line tracking_numbers.go.rl:63
+//line tracking_numbers.go.rl:64
 
 			if 10-(fg.sum % 10) == (int(data[p]) - '0') {
 				fg.end = p+1
@@ -584,7 +584,7 @@ tr17:
 			}
 		
 		case 0:
-//line tracking_numbers.go.rl:81
+//line tracking_numbers.go.rl:83
 
 		case 15:
 //line tracking_numbers.go.rl:50
@@ -593,7 +593,7 @@ tr17:
 				found = append(found, TrackingNumber{"FedEx", data[fe.start:fe.end]})
 			}
 		
-//line tracking_numbers.go.rl:68
+//line tracking_numbers.go.rl:69
 
 			if fg.end > fg.start && !(fe.end > fe.start) { // because we can overlap with FedEx Express
 				found = append(found, TrackingNumber{"FedEx", data[fg.start:fg.end]})
@@ -605,7 +605,7 @@ tr17:
 
 	}
 
-//line tracking_numbers.go.rl:90
+//line tracking_numbers.go.rl:92
 
 
 	if cs < tracking_number_first_final {

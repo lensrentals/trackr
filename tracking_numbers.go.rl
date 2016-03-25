@@ -41,7 +41,7 @@ func findTrackingNumbers(data string) []TrackingNumber {
 		action fe1 { fe.sum += 1*(int(fc) - '0') }
 		action fe3 { fe.sum += 3*(int(fc) - '0') }
 		action fe7 { fe.sum += 7*(int(fc) - '0') }
-		action festart { fe.start = p }
+		action festart { fe.start = p; fe.sum = 0 }
 		action feend {
 			if ((fe.sum-7*(int(fc) - '0')) % 11) % 10 == (int(fc) - '0') {
 				fe.end = p+1
@@ -56,10 +56,11 @@ func findTrackingNumbers(data string) []TrackingNumber {
 		# FedEx Express is either 12 or 15 digits, in the 317317317317[317] pattern
 		fe = ( ( digit@fe3 digit@fe1 digit@fe7 ){4,5} @feend) >festart %feemit;
 
+
 		# FedEx Ground uses a checksum that multiplies digits by 2 coefficients
 		action fg1 { fg.sum += 1*(int(fc) - '0') }
 		action fg3 { fg.sum += 3*(int(fc) - '0') }
-		action fgstart { fg.start = p }
+		action fgstart { fg.start = p; fg.sum = 0 }
 		action fgend {
 			if 10-(fg.sum % 10) == (int(fc) - '0') {
 				fg.end = p+1
@@ -73,6 +74,7 @@ func findTrackingNumbers(data string) []TrackingNumber {
 
 		# Yes, FedEx Ground is really 15 digits, just like FedEx Express
 		fg = ( (digit@fg1 digit@fg3){7} digit@fgend) >fgstart %fgemit;
+
 
 		# Tracking numbers are any of our matchers
 		tracking = fe | fg;
