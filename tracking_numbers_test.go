@@ -78,14 +78,26 @@ func TestFindTrackingNumbers(t *testing.T) {
 		{"mangled UPS", "1Z0A19T50395201568", []TrackingNumber{}},
 		{"mangled UPS", "1Z0A19T50395201569", []TrackingNumber{}},
 		{"UPS with extra number", "1Z0A19T503952015695", []TrackingNumber{}},
+		{"UPS with extra letter", "1Z0A19T50395201569A", []TrackingNumber{}},
 		{"UPS with spaces", "  1Z0A19T50395201562  ", []TrackingNumber{{"UPS", "1Z0A19T50395201562"}}},
 		{"UPS with words", "this 1Z0A19T50395201562 thing", []TrackingNumber{{"UPS", "1Z0A19T50395201562"}}},
 		{"UPS with punctuation", "here:1Z0A19T50395201562!!!", []TrackingNumber{{"UPS", "1Z0A19T50395201562"}}},
 		{"multiple UPS", "1Z17RV550319270595 and 1ZW0W2150362177018?", []TrackingNumber{{"UPS", "1Z17RV550319270595"}, {"UPS", "1ZW0W2150362177018"}}},
+
+		{"USPS mod 10", "9505514863416085007661", []TrackingNumber{{"USPS", "9505514863416085007661"}}},
+		{"USPS mod 10", "9500114129076084016042", []TrackingNumber{{"USPS", "9500114129076084016042"}}},
+		{"USPS mod 10", "9114999944314135394161", []TrackingNumber{{"USPS", "9114999944314135394161"}}},
+		{"USPS mod 10", "9405503699300135960087", []TrackingNumber{{"USPS", "9405503699300135960087"}}},
+		{"USPS mod 10", "9400109699938317563628", []TrackingNumber{{"USPS", "9400109699938317563628"}}},
+		{"USPS mod 10", "9405510200830034303190", []TrackingNumber{{"USPS", "9405510200830034303190"}}},
+		{"USPS mod 10", "70150640000609285719", []TrackingNumber{{"USPS", "70150640000609285719"}}},
+		{"USPS mod 10", "13152810000050524531", []TrackingNumber{{"USPS", "13152810000050524531"}}},
+
+		{"mangled USPS", "9114901496450568878985", []TrackingNumber{}},
 	}
 	for _, tt := range tests {
 		if got := findTrackingNumbers(tt.message); !reflect.DeepEqual(got, tt.want) {
-			t.Errorf("%q. findTrackingNumbers() = %v, want %v", tt.name, got, tt.want)
+			t.Errorf("%s failed: findTrackingNumbers(%q) = %v, want %v", tt.name, tt.message, got, tt.want)
 		}
 	}
 }
