@@ -38,14 +38,19 @@ func findTrackingNumbers(data string) []TrackingNumber {
 	}
 
 	// FedEx Ground
+	var fg struct {
+		sum int
+		start int
+		end int
+	}
 
 	
-//line tracking_numbers.go:44
+//line tracking_numbers.go:49
 	{
 	cs = tracking_number_start
 	}
 
-//line tracking_numbers.go:49
+//line tracking_numbers.go:54
 	{
 	if p == pe {
 		goto _test_eof
@@ -88,17 +93,33 @@ func findTrackingNumbers(data string) []TrackingNumber {
 	}
 	goto st_out
 tr0:
-//line tracking_numbers.go.rl:59
+//line tracking_numbers.go.rl:81
 
 	goto st0
 tr14:
-//line tracking_numbers.go.rl:46
+//line tracking_numbers.go.rl:50
 
 			if fe.end > fe.start {
 				found = append(found, TrackingNumber{"FedEx", data[fe.start:fe.end]})
 			}
 		
-//line tracking_numbers.go.rl:59
+//line tracking_numbers.go.rl:81
+
+	goto st0
+tr18:
+//line tracking_numbers.go.rl:50
+
+			if fe.end > fe.start {
+				found = append(found, TrackingNumber{"FedEx", data[fe.start:fe.end]})
+			}
+		
+//line tracking_numbers.go.rl:68
+
+			if fg.end > fg.start && !(fe.end > fe.start) { // because we can overlap with FedEx Express
+				found = append(found, TrackingNumber{"FedEx", data[fg.start:fg.end]})
+			}
+		
+//line tracking_numbers.go.rl:81
 
 	goto st0
 	st0:
@@ -106,7 +127,7 @@ tr14:
 			goto _test_eof0
 		}
 	st_case_0:
-//line tracking_numbers.go:110
+//line tracking_numbers.go:131
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -121,17 +142,21 @@ tr14:
 		}
 		goto tr0
 tr1:
-//line tracking_numbers.go.rl:39
+//line tracking_numbers.go.rl:44
  fe.start = p 
-//line tracking_numbers.go.rl:37
+//line tracking_numbers.go.rl:42
  fe.sum += 3*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:62
+ fg.start = p 
+//line tracking_numbers.go.rl:60
+ fg.sum += 1*(int(data[p]) - '0') 
 	goto st1
 	st1:
 		if p++; p == pe {
 			goto _test_eof1
 		}
 	st_case_1:
-//line tracking_numbers.go:135
+//line tracking_numbers.go:160
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -146,15 +171,17 @@ tr1:
 		}
 		goto tr0
 tr3:
-//line tracking_numbers.go.rl:36
+//line tracking_numbers.go.rl:41
  fe.sum += 1*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:61
+ fg.sum += 3*(int(data[p]) - '0') 
 	goto st2
 	st2:
 		if p++; p == pe {
 			goto _test_eof2
 		}
 	st_case_2:
-//line tracking_numbers.go:158
+//line tracking_numbers.go:185
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -169,15 +196,17 @@ tr3:
 		}
 		goto tr0
 tr4:
-//line tracking_numbers.go.rl:38
+//line tracking_numbers.go.rl:43
  fe.sum += 7*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:60
+ fg.sum += 1*(int(data[p]) - '0') 
 	goto st3
 	st3:
 		if p++; p == pe {
 			goto _test_eof3
 		}
 	st_case_3:
-//line tracking_numbers.go:181
+//line tracking_numbers.go:210
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -192,15 +221,17 @@ tr4:
 		}
 		goto tr0
 tr5:
-//line tracking_numbers.go.rl:37
+//line tracking_numbers.go.rl:42
  fe.sum += 3*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:61
+ fg.sum += 3*(int(data[p]) - '0') 
 	goto st4
 	st4:
 		if p++; p == pe {
 			goto _test_eof4
 		}
 	st_case_4:
-//line tracking_numbers.go:204
+//line tracking_numbers.go:235
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -215,15 +246,17 @@ tr5:
 		}
 		goto tr0
 tr6:
-//line tracking_numbers.go.rl:36
+//line tracking_numbers.go.rl:41
  fe.sum += 1*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:60
+ fg.sum += 1*(int(data[p]) - '0') 
 	goto st5
 	st5:
 		if p++; p == pe {
 			goto _test_eof5
 		}
 	st_case_5:
-//line tracking_numbers.go:227
+//line tracking_numbers.go:260
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -238,15 +271,17 @@ tr6:
 		}
 		goto tr0
 tr7:
-//line tracking_numbers.go.rl:38
+//line tracking_numbers.go.rl:43
  fe.sum += 7*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:61
+ fg.sum += 3*(int(data[p]) - '0') 
 	goto st6
 	st6:
 		if p++; p == pe {
 			goto _test_eof6
 		}
 	st_case_6:
-//line tracking_numbers.go:250
+//line tracking_numbers.go:285
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -261,15 +296,17 @@ tr7:
 		}
 		goto tr0
 tr8:
-//line tracking_numbers.go.rl:37
+//line tracking_numbers.go.rl:42
  fe.sum += 3*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:60
+ fg.sum += 1*(int(data[p]) - '0') 
 	goto st7
 	st7:
 		if p++; p == pe {
 			goto _test_eof7
 		}
 	st_case_7:
-//line tracking_numbers.go:273
+//line tracking_numbers.go:310
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -284,15 +321,17 @@ tr8:
 		}
 		goto tr0
 tr9:
-//line tracking_numbers.go.rl:36
+//line tracking_numbers.go.rl:41
  fe.sum += 1*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:61
+ fg.sum += 3*(int(data[p]) - '0') 
 	goto st8
 	st8:
 		if p++; p == pe {
 			goto _test_eof8
 		}
 	st_case_8:
-//line tracking_numbers.go:296
+//line tracking_numbers.go:335
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -307,15 +346,17 @@ tr9:
 		}
 		goto tr0
 tr10:
-//line tracking_numbers.go.rl:38
+//line tracking_numbers.go.rl:43
  fe.sum += 7*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:60
+ fg.sum += 1*(int(data[p]) - '0') 
 	goto st9
 	st9:
 		if p++; p == pe {
 			goto _test_eof9
 		}
 	st_case_9:
-//line tracking_numbers.go:319
+//line tracking_numbers.go:360
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -330,15 +371,17 @@ tr10:
 		}
 		goto tr0
 tr11:
-//line tracking_numbers.go.rl:37
+//line tracking_numbers.go.rl:42
  fe.sum += 3*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:61
+ fg.sum += 3*(int(data[p]) - '0') 
 	goto st10
 	st10:
 		if p++; p == pe {
 			goto _test_eof10
 		}
 	st_case_10:
-//line tracking_numbers.go:342
+//line tracking_numbers.go:385
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -353,15 +396,17 @@ tr11:
 		}
 		goto tr0
 tr12:
-//line tracking_numbers.go.rl:36
+//line tracking_numbers.go.rl:41
  fe.sum += 1*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:60
+ fg.sum += 1*(int(data[p]) - '0') 
 	goto st11
 	st11:
 		if p++; p == pe {
 			goto _test_eof11
 		}
 	st_case_11:
-//line tracking_numbers.go:365
+//line tracking_numbers.go:410
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -376,22 +421,23 @@ tr12:
 		}
 		goto tr0
 tr13:
-//line tracking_numbers.go.rl:38
+//line tracking_numbers.go.rl:43
  fe.sum += 7*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:40
+//line tracking_numbers.go.rl:45
 
-			log.Printf("feend");
 			if ((fe.sum-7*(int(data[p]) - '0')) % 11) % 10 == (int(data[p]) - '0') {
 				fe.end = p+1
 			}
 		
+//line tracking_numbers.go.rl:61
+ fg.sum += 3*(int(data[p]) - '0') 
 	goto st12
 	st12:
 		if p++; p == pe {
 			goto _test_eof12
 		}
 	st_case_12:
-//line tracking_numbers.go:395
+//line tracking_numbers.go:441
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -406,15 +452,17 @@ tr13:
 		}
 		goto tr14
 tr15:
-//line tracking_numbers.go.rl:37
+//line tracking_numbers.go.rl:42
  fe.sum += 3*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:60
+ fg.sum += 1*(int(data[p]) - '0') 
 	goto st13
 	st13:
 		if p++; p == pe {
 			goto _test_eof13
 		}
 	st_case_13:
-//line tracking_numbers.go:418
+//line tracking_numbers.go:466
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -429,15 +477,17 @@ tr15:
 		}
 		goto tr0
 tr16:
-//line tracking_numbers.go.rl:36
+//line tracking_numbers.go.rl:41
  fe.sum += 1*(int(data[p]) - '0') 
+//line tracking_numbers.go.rl:61
+ fg.sum += 3*(int(data[p]) - '0') 
 	goto st14
 	st14:
 		if p++; p == pe {
 			goto _test_eof14
 		}
 	st_case_14:
-//line tracking_numbers.go:441
+//line tracking_numbers.go:491
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -452,13 +502,18 @@ tr16:
 		}
 		goto tr0
 tr17:
-//line tracking_numbers.go.rl:38
+//line tracking_numbers.go.rl:43
  fe.sum += 7*(int(data[p]) - '0') 
-//line tracking_numbers.go.rl:40
+//line tracking_numbers.go.rl:45
 
-			log.Printf("feend");
 			if ((fe.sum-7*(int(data[p]) - '0')) % 11) % 10 == (int(data[p]) - '0') {
 				fe.end = p+1
+			}
+		
+//line tracking_numbers.go.rl:63
+
+			if 10-(fg.sum % 10) == (int(data[p]) - '0') {
+				fg.end = p+1
 			}
 		
 	goto st15
@@ -467,7 +522,7 @@ tr17:
 			goto _test_eof15
 		}
 	st_case_15:
-//line tracking_numbers.go:471
+//line tracking_numbers.go:526
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -480,7 +535,7 @@ tr17:
 		default:
 			goto st16
 		}
-		goto tr14
+		goto tr18
 	st16:
 		if p++; p == pe {
 			goto _test_eof16
@@ -521,23 +576,36 @@ tr17:
 	_test_eof: {}
 	if p == eof {
 		switch cs {
-		case 12, 15:
-//line tracking_numbers.go.rl:46
+		case 12:
+//line tracking_numbers.go.rl:50
 
 			if fe.end > fe.start {
 				found = append(found, TrackingNumber{"FedEx", data[fe.start:fe.end]})
 			}
 		
 		case 0:
-//line tracking_numbers.go.rl:59
+//line tracking_numbers.go.rl:81
 
-//line tracking_numbers.go:535
+		case 15:
+//line tracking_numbers.go.rl:50
+
+			if fe.end > fe.start {
+				found = append(found, TrackingNumber{"FedEx", data[fe.start:fe.end]})
+			}
+		
+//line tracking_numbers.go.rl:68
+
+			if fg.end > fg.start && !(fe.end > fe.start) { // because we can overlap with FedEx Express
+				found = append(found, TrackingNumber{"FedEx", data[fg.start:fg.end]})
+			}
+		
+//line tracking_numbers.go:603
 		}
 	}
 
 	}
 
-//line tracking_numbers.go.rl:68
+//line tracking_numbers.go.rl:90
 
 
 	if cs < tracking_number_first_final {
