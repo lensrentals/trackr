@@ -1,4 +1,4 @@
-`trackr`
+`trackr` [![Build Status](https://travis-ci.org/lensrentals/trackr.svg?branch=master)](https://travis-ci.org/lensrentals/trackr)
 =======
 
 `trackr` pulls tracking numbers out of unstructured text.
