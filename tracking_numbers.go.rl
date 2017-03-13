@@ -1,3 +1,9 @@
+// WARNING: tracking_numbers.go is generated from tracking_numbers.go.rl.
+// This notice appears in both files.
+//
+// If you are editing tracking_numbers.go.rl, be sure to `go generate` afterwards.
+// If you are editing tracking_numbers.go, please stop, since your changes will be overwritten.
+
 package trackr
 
 type TrackingNumber struct {
@@ -11,12 +17,12 @@ type TrackingNumber struct {
 }%%
 
 
-func findTrackingNumbers(data string) []TrackingNumber {
+func Find(data string) []TrackingNumber {
 	// Ragel counters
 	cs, p, pe, eof := 0, 0, len(data), len(data)
 
 	// Output
-	found := make([]TrackingNumber, 0, 4)
+	var found []TrackingNumber
 
 	// Matcher states
 	var wordStart int
@@ -213,6 +219,10 @@ func findTrackingNumbers(data string) []TrackingNumber {
 		write init;
 		write exec;
 	}%%
+
+	if len(found) == 0 {
+		found = nil
+	}
 
 	return found
 }

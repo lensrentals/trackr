@@ -1,11 +1,12 @@
 package trackr
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
 
-func TestFindTrackingNumbers(t *testing.T) {
+func TestFind(t *testing.T) {
 	tests := []struct {
 		name    string
 		message string
@@ -118,40 +119,48 @@ func TestFindTrackingNumbers(t *testing.T) {
 		{"mangled USPS", "9114901496450568878985", []TrackingNumber{}},
 	}
 	for _, tt := range tests {
-		// try it verbatim
-		message := tt.message
-		want := tt.want
-		if got := findTrackingNumbers(message); !reflect.DeepEqual(got, want) {
-			t.Errorf("%s failed: findTrackingNumbers(%q) = %v, want %v", tt.name, message, got, want)
-		}
+		t.Run(fmt.Sprintf("%s/%s", tt.name, tt.message), func(t *testing.T) {
+			// try it verbatim
+			message := tt.message
+			want := tt.want
+			if len(want) == 0 {
+				want = nil
+			}
+			if got := Find(message); !reflect.DeepEqual(got, want) {
+				t.Errorf("Find(%q) = %v, want %v", message, got, want)
+			}
 
-		// prepending/appending crap shouldn't change anything
-		// try that
-		message = "wat:" + tt.message + "?"
-		if got := findTrackingNumbers(message); !reflect.DeepEqual(got, want) {
-			t.Errorf("%s failed: findTrackingNumbers(%q) = %v, want %v", tt.name, message, got, want)
-		}
+			// prepending/appending crap shouldn't change anything
+			// try that
+			message = "wat:" + tt.message + "?"
+			if got := Find(message); !reflect.DeepEqual(got, want) {
+				t.Errorf("Find(%q) = %v, want %v", message, got, want)
+			}
 
-		message = "words words\n" + tt.message
-		if got := findTrackingNumbers(message); !reflect.DeepEqual(got, want) {
-			t.Errorf("%s failed: findTrackingNumbers(%q) = %v, want %v", tt.name, message, got, want)
-		}
+			message = "words words\n" + tt.message
+			if got := Find(message); !reflect.DeepEqual(got, want) {
+				t.Errorf("Find(%q) = %v, want %v", message, got, want)
+			}
 
-		message = "555-1212-324 " + tt.message + " S430343"
-		if got := findTrackingNumbers(message); !reflect.DeepEqual(got, want) {
-			t.Errorf("%s failed: findTrackingNumbers(%q) = %v, want %v", tt.name, message, got, want)
-		}
+			message = "555-1212-324 " + tt.message + " S430343"
+			if got := Find(message); !reflect.DeepEqual(got, want) {
+				t.Errorf("Find(%q) = %v, want %v", message, got, want)
+			}
 
-		// doubling the message and optionally including nonsense should return double the results
-		message = tt.message + "/" + tt.message
-		want = append(tt.want, tt.want...)
-		if got := findTrackingNumbers(message); !reflect.DeepEqual(got, want) {
-			t.Errorf("%s failed: findTrackingNumbers(%q) = %v, want %v", tt.name, message, got, want)
-		}
+			// doubling the message and optionally including nonsense should return double the results
+			message = tt.message + "/" + tt.message
+			want = append(tt.want, tt.want...)
+			if len(want) == 0 {
+				want = nil
+			}
+			if got := Find(message); !reflect.DeepEqual(got, want) {
+				t.Errorf("Find(%q) = %v, want %v", message, got, want)
+			}
 
-		message = "what about " + tt.message + "&" + tt.message + "?"
-		if got := findTrackingNumbers(message); !reflect.DeepEqual(got, want) {
-			t.Errorf("%s failed: findTrackingNumbers(%q) = %v, want %v", tt.name, message, got, want)
-		}
+			message = "what about " + tt.message + "&" + tt.message + "?"
+			if got := Find(message); !reflect.DeepEqual(got, want) {
+				t.Errorf("Find(%q) = %v, want %v", message, got, want)
+			}
+		})
 	}
 }
